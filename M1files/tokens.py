@@ -10,22 +10,22 @@ from typing import (
 
 @unique
 class TokenType(Enum):
-    ASSING = auto()
-    COMMA = auto()
-    EOF = auto()
-    FUNCTION = auto()
-    IDENTIFIER = auto()
-    IF = auto()
-    ILLEGAL = auto()
-    INTEGER = auto()
-    LBRACE = auto()
-    LET = auto()
-    LPAREN = auto()
-    MINUS = auto()
-    PLUS = auto()
-    RBRACE = auto()
-    RPAREN = auto()
-    SEMICOLON = auto()
+    ASSING = auto() # =
+    COMMA = auto() # ,
+    EOF = auto() #Blank
+    FUNCTION = auto() #function
+    IDENTIFIER = auto() #Letter
+    IF = auto() #if
+    ILLEGAL = auto() #Not identified
+    INTEGER = auto() #Number
+    LBRACE = auto() # {
+    LET = auto() # variable
+    LPAREN = auto() # (
+    MINUS = auto() # -
+    PLUS = auto() # +
+    RBRACE = auto() # }
+    RPAREN = auto() # )
+    SEMICOLON = auto() # ;
 
 
 class Token(NamedTuple):
@@ -33,9 +33,11 @@ class Token(NamedTuple):
     literal:str
     def __str__(self) -> str:
         return f'Type: {self.token_type}, Literal {self.literal}'
+
 def lookup_token_type(literal:str)->TokenType:
     keywords:Dict[str, TokenType]={
         'function':TokenType.FUNCTION,
-        'variable':TokenType.LET
+        'variable':TokenType.LET,
+        'if':TokenType.IF
     }
     return keywords.get(literal, TokenType.IDENTIFIER)

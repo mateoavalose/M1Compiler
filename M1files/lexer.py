@@ -15,30 +15,45 @@ class Lexer:
 
     def next_token(self)->Token:
         self._skip_whitespace()
-        if match(r'^=$', self._character):
+        if match(r'^=$', self._character): # Assing=
           token=Token(TokenType.ASSING, self._character)
-        elif match(r'^\+$', self._character):
+        elif match(r'^\+$', self._character): # Plus +
             token = Token(TokenType.PLUS, self._character)
-        elif match(r'^$', self._character):
+        elif match(r'^$', self._character): #Blank
           token = Token(TokenType.EOF, self._character)
-        #--------------------------------------------------
-        elif self._is_letter(self._character):
+        #---------------------------------------------------------------
+        elif match(r'^{$', self._character): # Lbrace {
+            token = Token(TokenType.LBRACE, self._character)
+        elif match(r'^}$', self._character): # Rbrace }
+            token = Token(TokenType.RBRACE, self._character)
+        elif match(r'^\($', self._character): # Lparen (
+            token = Token(TokenType.LPAREN, self._character)
+        elif match(r'^\)$', self._character):# Rparen )
+            token = Token(TokenType.RPAREN, self._character)
+        elif match(r'^-$', self._character): # Minus -
+            token = Token(TokenType.MINUS, self._character)
+        elif match(r'^,$', self._character): #Comma ,
+            token = Token(TokenType.COMMA, self._character)
+        elif match(r'^;$', self._character): #Semicolon ;
+            token = Token(TokenType.SEMICOLON, self._character)
+        #---------------------------------------------------------------
+        elif self._is_letter(self._character): #Letter
             literal=self._read_identifier()
             token_type=lookup_token_type(literal)
             return Token(token_type,literal)
-        elif self._is_number(self._character):
+        elif self._is_number(self._character): #Number
             literal=self._read_number()
             token_type=lookup_token_type(literal)
             return Token(TokenType.INTEGER,literal)
-        #--------------------------------------------------
-        else:
+
+        else: #Not identified, ILLEGAL
             print(self._character)
             token=Token(TokenType.ILLEGAL, self._character)
         self._read_character()
         return token
     
     #--------------------------------------------------
-    def _is_letter(self,character:str)->bool:
+    def _is_letter(self,character:str)->bool: 
        return bool(match(r'^[a-záéíóúA-ZÁÉÍÓÚñÑ_]$', character))
     
     def _is_number(self,character:str)->bool:

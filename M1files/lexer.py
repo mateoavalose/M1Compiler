@@ -15,8 +15,16 @@ class Lexer:
 
     def next_token(self)->Token:
         self._skip_whitespace()
-        if match(r'^=$', self._character): # Assing=
-          token=Token(TokenType.ASSING, self._character)
+        if match(r'^=$', self._character): # Assing or equals =
+            if self._peek_character() == '=':
+                token = self._make_two_character_token(TokenType.EQ) #Equals ==
+            else: 
+                token=Token(TokenType.ASSING, self._character) 
+        elif match(r'^!$',self._character): #Different than
+            if self._peek_character == '=':
+                token = self._make_two_character_token(TokenType.DIF)
+            else:
+                token = Token(TokenType.NEGATION, self._character)
         elif match(r'^\+$', self._character): # Plus +
             token = Token(TokenType.PLUS, self._character)
         elif match(r'^$', self._character): #Blank
@@ -45,6 +53,17 @@ class Lexer:
             literal=self._read_number()
             token_type=lookup_token_type(literal)
             return Token(TokenType.INTEGER,literal)
+        
+        elif match(r'^>$', self._character): #Greater than
+            if self._peek_character() == '=':
+                token = self._make_two_character_token(TokenType.GTE) #Greater than or equals
+            else:
+                token = Token(TokenType.GT, self._character)
+        elif match(r'^<$', self._character): #Less than
+            if self._peek_character() == '=':
+                token = self._make_two_character_token(TokenType.LTE) #Less than or equals
+            else:
+                token = Token(TokenType.LT, self._character)
 
         else: #Not identified, ILLEGAL
             print(self._character)
@@ -79,6 +98,15 @@ class Lexer:
             self._character=self._source[self._read_position]
         self._position=self._read_position
         self._read_position+=1
+    def _peek_character(self) -> str:
+        if(self._read_position) >= len(self._source):
+            return ''
+        return  self._source[self._read_position]
+    def _make_two_character_token(self, token_type: TokenType) -> Token:
+        prefix = self._character
+        self._read_character()
+        suffix = self._character
+        return Token(token_type, f'{prefix}{suffix}')
 
     def _skip_whitespace(self)-> None:
         while match(r'^\s$', self._character):

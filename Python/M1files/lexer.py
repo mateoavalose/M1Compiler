@@ -17,11 +17,11 @@ class Lexer:
         self._skip_whitespace()
         if match(r'^=$', self._character): # Assing or equals =
             if self._peek_character() == '=':
-                token = self._make_two_character_token(TokenType.EQ) #Equals ==
+                token = self._make_two_character_token(TokenType.EQ) # Equals ==
             else: 
                 token=Token(TokenType.ASSING, self._character) 
-        elif match(r'^!$',self._character): #Different than
-            if self._peek_character == '=':
+        elif match(r'^!$',self._character): # Different than !
+            if self._peek_character() == '=':
                 token = self._make_two_character_token(TokenType.DIF)
             else:
                 token = Token(TokenType.NEGATION, self._character)
@@ -29,7 +29,6 @@ class Lexer:
             token = Token(TokenType.PLUS, self._character)
         elif match(r'^$', self._character): #Blank
           token = Token(TokenType.EOF, self._character)
-        #---------------------------------------------------------------
         elif match(r'^{$', self._character): # Lbrace {
             token = Token(TokenType.LBRACE, self._character)
         elif match(r'^}$', self._character): # Rbrace }
@@ -44,7 +43,6 @@ class Lexer:
             token = Token(TokenType.COMMA, self._character)
         elif match(r'^;$', self._character): #Semicolon ;
             token = Token(TokenType.SEMICOLON, self._character)
-        #---------------------------------------------------------------
         elif self._is_letter(self._character): #Letter
             literal=self._read_identifier()
             token_type=lookup_token_type(literal)
@@ -53,7 +51,6 @@ class Lexer:
             literal=self._read_number()
             token_type=lookup_token_type(literal)
             return Token(TokenType.INTEGER,literal)
-        
         elif match(r'^>$', self._character): #Greater than
             if self._peek_character() == '=':
                 token = self._make_two_character_token(TokenType.GTE) #Greater than or equals
@@ -64,14 +61,12 @@ class Lexer:
                 token = self._make_two_character_token(TokenType.LTE) #Less than or equals
             else:
                 token = Token(TokenType.LT, self._character)
-
         else: #Not identified, ILLEGAL
             print(self._character)
             token=Token(TokenType.ILLEGAL, self._character)
         self._read_character()
         return token
     
-    #--------------------------------------------------
     def _is_letter(self,character:str)->bool: 
        return bool(match(r'^[a-záéíóúA-ZÁÉÍÓÚñÑ_]$', character))
     
@@ -89,7 +84,6 @@ class Lexer:
         while self._is_letter(self._character):
             self._read_character()
         return self._source[initial_position:self._position]
-    #--------------------------------------------------
 
     def _read_character(self)->None:
         if self._read_position>=len(self._source):
@@ -98,10 +92,12 @@ class Lexer:
             self._character=self._source[self._read_position]
         self._position=self._read_position
         self._read_position+=1
+
     def _peek_character(self) -> str:
         if(self._read_position) >= len(self._source):
             return ''
         return  self._source[self._read_position]
+    
     def _make_two_character_token(self, token_type: TokenType) -> Token:
         prefix = self._character
         self._read_character()

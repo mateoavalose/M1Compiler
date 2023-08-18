@@ -33,3 +33,6 @@ class ParserTest(TestCase):
         parser:Parser=Parser(lexer)
         program:Program=parser.parse_program()
         self.assertEqual(len(program.statements), 3)
+        for statement in program.statements:
+            self.assertEqual(statement.token_literal(), 'variable')
+            self.assertIsInstance(statement, LesStatement)

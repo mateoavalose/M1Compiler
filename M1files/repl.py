@@ -5,7 +5,7 @@ from M1files.tokens import(
 )
 
 EOF_TOKEN:Token=Token(TokenType.EOF, '')
-def star_repel()->None:
+def start_repl()->None:
     while(source:=input('>> '))!='close()':
         lexer:Lexer=Lexer(source)
 

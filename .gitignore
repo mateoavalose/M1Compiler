@@ -30,6 +30,8 @@ CMakeDoxyDocs/
 Makefile
 
 # Ignore Python-specific files
+__pycache__
+.pytest_cache
 
 
 # Ignore C++ build files

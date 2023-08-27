@@ -1,10 +1,15 @@
 #include <iostream>
 #include <regex>
-#include "HeaderFiles/tokens.h"
 #include <string>
 #include <cctype>
+#include "HeaderFiles/tokens.h"
 
 #include "HeaderFiles/lexer.h"
+
+Lexer::Lexer(const std::string &source): _source(source), _position(0), _read_position(0)
+{
+    _read_character();
+}
 
 class Lexer
 {
@@ -22,40 +27,40 @@ public:
 
     Token next_token()
     {
-        Token token(TokenType::ILLEGAL, _character);
+        Token token{TokenType::ILLEGAL, _character};
         _skip_whitespace();
         if (std::regex_match(_character, std::regex("^=$"))) // Assing or equals =
         {
             if (_peek_character() == '=')
-                Token token = _make_two_character_token(TokenType::EQ); // Equals ==
+                token = _make_two_character_token(TokenType::EQ); // Equals ==
             else
-                Token token(TokenType::ASSIGN, _character);
+                token = Token{TokenType::ASSIGN, _character};
         }
         else if (std::regex_match(_character, std::regex("^!$"))) // Different than !
         {
             if (_peek_character() == '=')
-                Token token = _make_two_character_token(TokenType::DIF);
+                token = _make_two_character_token(TokenType::DIF);
             else
-                Token token(TokenType::NEGATION, _character);
+                token = Token{TokenType::NEGATION, _character};
         }
         else if (std::regex_match(_character, std::regex("^\\+$"))) // Plus +
-            Token token(TokenType::PLUS, _character);
-        else if (std::regex_match(_character, std::regex("^$"))) // Blank
-            Token token(TokenType::EOF_TOKEN, _character);
+            token = Token{TokenType::PLUS, _character};
+        else if (std::regex_match(_character, std::regex("^\\s$"))) // Blank
+            token = Token{TokenType::EOF_TOKEN, _character};
         else if(std::regex_match(_character, std::regex("^{$"))) // Lbrace {
-            Token token(TokenType::LBRACE, _character);
+            token = Token{TokenType::LBRACE, _character};
         else if(std::regex_match(_character, std::regex("^}$"))) // Rbrace }
-            Token token(TokenType::RBRACE, _character);
+            token = Token{TokenType::RBRACE, _character};
         else if(std::regex_match(_character, std::regex("^\\($"))) // Lparen (
-            Token token(TokenType::LPAREN, _character);
+            token = Token{TokenType::LPAREN, _character};
         else if(std::regex_match(_character, std::regex("^\\)$"))) // Rparen )
-            Token token(TokenType::RPAREN, _character);
+            token = Token{TokenType::RPAREN, _character};
         else if(std::regex_match(_character, std::regex("^-$"))) // Minus -
-            Token token(TokenType::MINUS, _character);
+            token = Token{TokenType::MINUS, _character};
         else if(std::regex_match(_character, std::regex("^,$"))) // Comma ,
-            Token token(TokenType::COMMA, _character);
+            token = Token{TokenType::COMMA, _character};
         else if(std::regex_match(_character, std::regex("^;$"))) // Semicolon ;
-            Token token(TokenType::SEMICOLON, _character);
+            token = Token{TokenType::SEMICOLON, _character};
         else if(_is_letter(_character[0])) // Letter
         {
             std::string literal = _read_identifier();
@@ -71,38 +76,38 @@ public:
         else if(std::regex_match(_character, std::regex("^>$"))) // Greater than > or equals >=
         {
             if(_peek_character() == '=')
-                Token token = _make_two_character_token(TokenType::GTE);
+                token = _make_two_character_token(TokenType::GTE);
             else
-                Token token(TokenType::GT, _character);
+                token = Token{TokenType::GT, _character};
         } 
         else if(std::regex_match(_character, std::regex("^<$"))) // Less than < or equals <=
         {
             if(_peek_character() == '=')
-                Token token = _make_two_character_token(TokenType::LTE);
+                token = _make_two_character_token(TokenType::LTE);
             else
-                Token token(TokenType::LT, _character);
-        } 
+                token = Token{TokenType::LT, _character};
+        }  
         /*else // Not identified, ILLEGAL
         {
             std::cout << _character << std::endl;
-            Token token(TokenType::ILLEGAL, _character);
+            Token token{TokenType::ILLEGAL, _character};
         }*/
         _read_character();
         return token;
     }
 
-    //-----------------------------------------------------------------------------------
-    bool Lexer::_is_letter(char character)
+    
+    bool _is_letter(char character)
     {
         return std::regex_match(std::string(1, character), std::regex("^[a-záéíóúA-ZÁÉÍÓÚñÑ_]$"));
     }
 
-    bool Lexer::_is_number(char character)
+    bool _is_number(char character)
     {
         return std::regex_match(std::string(1, character), std::regex("^\\d$"));
     }
 
-    std::string Lexer::_read_number()
+    std::string _read_number()
     {
         int initial_position = _position;
         while (_position < _source.length() && _is_number(_source[_position]))
@@ -112,7 +117,7 @@ public:
         return _source.substr(initial_position, _position - initial_position);
     }
 
-    std::string Lexer::_read_identifier()
+    std::string _read_identifier()
     {
         int initial_position = _position;
         while (_position < _source.length() && _is_letter(_source[_position]))
@@ -122,7 +127,7 @@ public:
         return _source.substr(initial_position, _position - initial_position);
     }
 
-    void Lexer::_read_character()
+    void _read_character()
     {
         if (_read_position >= _source.length())
         {
@@ -136,7 +141,7 @@ public:
         _read_position += 1;
     }
 
-    char Lexer::_peek_character()
+    char _peek_character()
     {
         if (_read_position >= _source.length())
         {
@@ -145,7 +150,7 @@ public:
         return _source[_read_position];
     }
 
-    Token Lexer::_make_two_character_token(TokenType token_type)
+    Token _make_two_character_token(TokenType token_type)
     {
         std::string prefix = std::string(1, _character[0]);
         _read_character();
@@ -153,7 +158,7 @@ public:
         return Token{token_type, prefix + suffix};
     }
 
-    void Lexer::_skip_whitespace()
+    void _skip_whitespace()
     {
         while (std::regex_match(_character, std::regex("^\\s$")))
         {

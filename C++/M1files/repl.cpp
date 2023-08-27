@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
-#include "M1files/HeaderFiles/lexer.h"
-#include "M1files/HeaderFiles/tokens.h"
+#include "HeaderFiles/lexer.h"
+#include "HeaderFiles/tokens.h"
 
-#include "M1files/HeaderFiles/repl.h"
+#include "HeaderFiles/repl.h"
 
 Token EOF_TOKEN{TokenType::EOF_TOKEN, ""};
 void start_repl() {    

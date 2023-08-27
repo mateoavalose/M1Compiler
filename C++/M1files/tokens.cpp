@@ -32,11 +32,11 @@ enum class TokenType {
 };
 
 struct Token {
-    TokenType token_type;
+    TokenType type;
     std::string literal;
 
     std::string to_string() const {
-        return "Type: " + std::to_string(static_cast<int>(token_type)) + ", Literal: " + literal;
+        return "Type: " + std::to_string(static_cast<int>(type)) + ", Literal: " + literal;
     }
 };
 

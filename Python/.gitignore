@@ -1,6 +1,0 @@
-ambiente/
-*.pyc
-*.swp
-.mypy_cache/
-__pycache__/
-.pytest_cache

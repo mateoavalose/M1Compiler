@@ -33,9 +33,9 @@ public:
     TokenType type;
     std::string literal;
 
-    Token(TokenType type, const std::string &literal);
+    Token(TokenType type, const std::string& literal);
 };
 
-TokenType lookup_token_type(const std::string &literal);
+TokenType lookup_token_type(const std::string& literal);
 
 #endif // TOKENS_H

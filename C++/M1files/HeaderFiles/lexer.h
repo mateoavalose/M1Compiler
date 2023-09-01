@@ -2,21 +2,11 @@
 #define LEXER_H
 
 #include <string>
-#include "tokens.h"
+#include "Tokens.h"
 
 class Lexer {
-private:
-    std::string _source;
-    std::string _character;
-    int _position;
-    int _read_position;
-
+//private:
 public:
-    Lexer(const std::string &source);
-
-    Token next_token();
-
-private:
     bool _is_letter(char character);
     bool _is_number(char character);
     std::string _read_number();
@@ -25,6 +15,10 @@ private:
     char _peek_character();
     Token _make_two_character_token(TokenType token_type);
     void _skip_whitespace();
+
+//public:
+    Lexer(const std::string &source);
+    Token next_token();
 };
 
 #endif // LEXER_H

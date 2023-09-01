@@ -44,10 +44,101 @@ class Identifier(Expression):
         self.value=value
     def __str__(self) -> str:
         return self.value
-class LesStatement(Statement):
+class LetStatement(Statement):
     def __init__ (self, token:Token, name:Optional[Identifier], value:Optional[Expression])->None:
         super().__init__(token)
         self.name=name
         self.value=value
     def __str__(self) -> str:
         return f'{self.token_literal()} {self.name} = {str(self.value)};'
+    
+class ReturnStatement(Statement):
+    def __init__(self,token:Token,value:Optional[Expression])->None:
+        super().__init__(token)
+        self.return_value=value
+    def __str__(self) -> str:
+        return f'{self.token_literal()} {str(self.value)};'
+    
+class Integer(Expression):
+    def __init__(self,token:Token,value:Optional[int]=None)->None:
+        super().__init__(token)
+        self.value=value
+    def __str__(self) -> str:
+        return str(self.value)
+    
+class Boolean(Expression):
+    def __init__(self,token:Token,value:Optional[bool]=None)->None:
+        super().__init__(token)
+        self.value=value
+    def __str__(self) -> str:
+        return str(self.value)
+    
+class Block(Statement):
+    def __init__(self,token:Token,statements:List[Statement])->None:
+        super().__init__(token)
+        self.statements=statements
+    def __str__(self) -> str:
+        out:List[str]=[str(statement) for statement in self.statements]
+        return ''.join(out)
+    
+class Function(Expression):
+    def __init__(self,token:Token,parameters:List[Identifier] = [], body:Optional[Block] = None)->None:
+        super().__init__(token)
+        self.parameters=parameters
+        self.body=body
+    def __str__(self) -> str:
+        param_list:List[str]=[str(parameter) for parameter in self.parameters]
+
+        params:str=', '.join(param_list)
+
+        return f'{self.token_literal()}({params}) {str(self.body)}'
+    
+class If(Expression):
+    def __init__(self,token:Token,condition:Optional[Expression] = None, consequence:Optional[Block] = None, alternative:Optional[Block] = None)->None:
+        super().__init__(token)
+        self.condition=condition
+        self.consequence=consequence
+        self.alternative=alternative
+
+    def __str__(self) -> str:
+        out:str=f' if{str(self.condition)} {str(self.consequence)}'
+        if self.alternative:
+            out+=f'else {str(self.alternative)}'
+        
+        return out
+    
+class Infix(Expression):
+    def __init__(self,token:Token,left:Expression = None, operator:str = None, right:Optional[Expression] = None)->None:
+        super().__init__(token)
+        self.left=left
+        self.operator=operator
+        self.right=right
+    def __str__(self) -> str:
+        return f'({str(self.left)} {self.operator} {str(self.right)})'
+    
+class Prefix(Expression):
+    def __init__(self,token:Token, operator:str, right:Optional[Expression] = None) -> None:
+        super().__init__(token)
+        self.operator=operator
+        self.right=right
+    def __str__(self) -> str:
+        return f'({self.operator} {str(self.right)})'
+
+class Call(Expression):
+    def __init__(self,token:Token,function:Expression,arguments:Optional[List[Expression]] = None)->None:
+        super().__init__(token)
+        self.function=function
+        self.arguments=arguments
+
+    def __str__(self) -> str:
+        assert self.arguments is not None
+        arg_list:List[str]=[str(argument) for argument in self.arguments]
+        args:str=', '.join(arg_list)
+
+        return f'{str(self.function)}({args})'
+
+class ExpressionStatement(Statement):
+    def __init__(self,token:Token,expression:Optional[Expression] = None)->None:
+        super().__init__(token)
+        self.expression=expression
+    

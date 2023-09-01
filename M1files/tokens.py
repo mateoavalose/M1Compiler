@@ -13,6 +13,7 @@ class TokenType(Enum):
     ASSING = auto() # =
     COMMA = auto() # ,
     DIF = auto() #Different
+    DIVISION = auto() # /
     ELSE = auto() # else
     EOF = auto() #Blank
     EQ = auto() #Equals

@@ -1,6 +1,40 @@
-ambiente/
-*.pyc
-*.swp
-.mypy_cache/
-__pycache__/
+# Ignore compiled output and build artifacts
+/build/
+/bin/
+/lib/
+*.exe
+*.out
+*.so
+*.dll
+*.dylib
+*.o
+
+# Ignore generated files
+compile_commands.json
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore CMake build directory
+CMakeFiles/
+CMakeCache.txt
+CMakeScripts/
+CMakeDoxyDocs/
+
+# Ignore Makefile
+Makefile
+
+# Ignore Python-specific files
+__pycache__
 .pytest_cache
+
+#Ignore C++-specific files
+C++
+
+# Ignore C++ build files
+*.cppcheck

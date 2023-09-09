@@ -17,6 +17,7 @@ class TokenType(Enum):
     ELSE = auto() # else
     EOF = auto() #Blank
     EQ = auto() #Equals
+    FALSE = auto() # false
     FUNCTION = auto() #function
     IDENTIFIER = auto() #Letter
     IF = auto() #if
@@ -30,11 +31,14 @@ class TokenType(Enum):
     LT = auto() #Less than
     LTE = auto() #Less than or equal
     MINUS = auto() # -
+    MULTIPLICATION = auto() # *
     NEGATION = auto() #!
     PLUS = auto() # +
     RBRACE = auto() # }
+    RETURN = auto() # return
     RPAREN = auto() # )
     SEMICOLON = auto() # ;
+    TRUE = auto() # true
 
 
 class Token(NamedTuple):
@@ -43,11 +47,14 @@ class Token(NamedTuple):
     def __str__(self) -> str:
         return f'Type: {self.token_type}, Literal {self.literal}'
 
-def lookup_token_type(literal:str)->TokenType:
+def lookup_token_type(literal:str) -> TokenType:
     keywords:Dict[str, TokenType]={
         'function':TokenType.FUNCTION,
         'variable':TokenType.LET,
         'if':TokenType.IF,
-        'else':TokenType.ELSE
+        'else':TokenType.ELSE,
+        'return':TokenType.RETURN,
+        'true':TokenType.TRUE,
+        'false':TokenType.FALSE
     }
     return keywords.get(literal, TokenType.IDENTIFIER)

@@ -13,8 +13,8 @@
 compile_commands.json
 
 # Ignore IDE-specific files
-.vscode/
-.idea/
+.vscode
+.idea
 
 # Ignore OS-specific files
 .DS_Store

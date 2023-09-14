@@ -5,12 +5,14 @@
 #include "HeaderFiles/tokens.h"
 #include "HeaderFiles/lexer.h"
 
-std::string _source;
-char _character;
-int _position;
-int _read_position;
+Lexer::Lexer(std::string &source) {
+    _source = source;
+    _character = '\0';
+    _position = 0;
+    _read_position = 0;
+}
 
-void _read_character() {
+void Lexer::_read_character() {
     if (_read_position >= _source.size()) {
         _character = '\0';
     } else {
@@ -20,35 +22,35 @@ void _read_character() {
     _read_position++;
 }
 
-char _peek_character() {
+char Lexer::_peek_character() {
     if (_read_position >= _source.size()) {
         return '\0';
     }
     return _source[_read_position];
 }
 
-Token _make_two_character_token(TokenType token_type) {
+Token Lexer::_make_two_character_token(TokenType token_type) {
     char prefix = _character;
     _read_character();
     char suffix = _character;
     return Token(token_type, std::string(1, prefix) + suffix);
 }
 
-void _skip_whitespace() {
+void Lexer::_skip_whitespace() {
     while (std::regex_match(std::string(1, _character), std::regex("^\\s$"))) {
         _read_character();
     }
 }
 
-bool _is_letter(char character) {
+bool Lexer::_is_letter(char character) {
     return std::regex_match(std::string(1, character), std::regex("^[a-zA-ZáéíóúÁÉÍÓÚñÑ_]$"));
 }
 
-bool _is_number(char character) {
+bool Lexer::_is_number(char character) {
     return std::regex_match(std::string(1, character), std::regex("^\\d$"));
 }
 
-std::string _read_number() {
+std::string Lexer::_read_number() {
     int initial_position = _position;
     while (_is_number(_character)) {
         _read_character();
@@ -56,7 +58,7 @@ std::string _read_number() {
     return _source.substr(initial_position, _position - initial_position);
 }
 
-std::string _read_identifier() {
+std::string Lexer::_read_identifier() {
     int initial_position = _position;
     while (_is_letter(_character)) {
         _read_character();
@@ -64,12 +66,7 @@ std::string _read_identifier() {
     return _source.substr(initial_position, _position - initial_position);
 }
 
-
-/*Lexer(const std::string &source): _source(source), _character('\0'), _position(0), _read_position(0) {
-    _read_character();
-}*/
-
-Token next_token() {
+Token Lexer::next_token() {
     _skip_whitespace();
     Token token(TokenType::ILLEGAL, std::string(1, _character)); // Default to ILLEGAL token
 
@@ -77,7 +74,7 @@ Token next_token() {
         if (_peek_character() == '=') {
             token = _make_two_character_token(TokenType::EQ);
         } else {
-            token = Token(TokenType::ASSIGN, std::string(1, _character));
+            token = Token(TokenType::ASSING, std::string(1, _character));
         }
     } else if (_character == '!') { // Negation ! or Dif !=
         if (_peek_character() == '=') {

@@ -4,35 +4,40 @@
 #include <string>
 
 enum class TokenType {
-    ASSIGN, //=
+    ASSING, // =
     COMMA, // ,
-    DIF, // !=
+    DIF, // Different
+    DIVISION, // /
     ELSE, // else
-    EOF_TOKEN, // Blank (End of File)
+    EOF_TOKEN, // Blank
     EQ, // Equals
+    FALSE, // false
     FUNCTION, // function
     IDENTIFIER, // Letter
     IF, // if
-    GT, // > (Greater than)
-    GTE, // >= (Greater than or equal)
+    GT, // Greater than
+    GTE, // Greater than or equal
     ILLEGAL, // Not identified
-    INTEGER, //Number
+    INTEGER, // Number
     LBRACE, // {
     LET, // variable
     LPAREN, // (
-    LT, // < (Less than)
-    LTE, // <= (Less than or equal)
-    MINUS, // - 
+    LT, //Less than
+    LTE, // Less than or equal
+    MINUS, // -
+    MULTIPLICATION, // *
     NEGATION, // !
     PLUS, // +
     RBRACE, // }
+    RETURN, // return
     RPAREN, // )
-    SEMICOLON // ;
+    SEMICOLON, // ;
+    TRUE // true
 };
 
-static const char *enumStr[] = {"ASSIGN", "COMMA", "DIF", "ELSE", "EOF_TOKEN", "EQ", "FUNCTION", 
+static const char *enumStr[] = {"ASSIGN", "COMMA", "DIF", "DIVISION", "ELSE", "EOF_TOKEN", "EQ", "FALSE", "FUNCTION", 
 "IDENTIFIER", "IF", "GT", "GTE", "ILLEGAL", "INTEGER", "LBRACE", "LET", "LPAREN", "LT", "LTE", 
-"MINUS", "NEGATION", "PLUS", "RBRACE", "RPAREN", "SEMICOLON"};
+"MINUS", "MULTIPLICATION", "NEGATION", "PLUS", "RBRACE", "RETURN", "RPAREN", "SEMICOLON", "TRUE"};
 
 class Token {
 public:

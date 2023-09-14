@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
 
-#include "HeaderFiles/lexer.h"
 #include "HeaderFiles/tokens.h"
+#include "HeaderFiles/lexer.h"
 #include "HeaderFiles/repl.h"
 
 Token EndOfFile_TOKEN{TokenType::EOF_TOKEN, ""};

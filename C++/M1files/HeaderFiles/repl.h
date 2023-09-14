@@ -1,7 +1,7 @@
 #ifndef REPL_H
 #define REPL_H
 
-#include "Lexer.h"
+#include "lexer.h"
 
 void start_repl();
 

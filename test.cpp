@@ -7,35 +7,40 @@
 //Tokens
 
 enum class TokenType {
-    ASSIGN, //=
+    ASSING, // =
     COMMA, // ,
-    DIF, // !=
+    DIF, // Different
+    DIVISION, // /
     ELSE, // else
-    EOF_TOKEN, // Blank (End of File)
+    EOF_TOKEN, // Blank
     EQ, // Equals
+    FALSE, // false
     FUNCTION, // function
     IDENTIFIER, // Letter
     IF, // if
-    GT, // > (Greater than)
-    GTE, // >= (Greater than or equal)
+    GT, // Greater than
+    GTE, // Greater than or equal
     ILLEGAL, // Not identified
-    INTEGER, //Number
+    INTEGER, // Number
     LBRACE, // {
     LET, // variable
     LPAREN, // (
-    LT, // < (Less than)
-    LTE, // <= (Less than or equal)
-    MINUS, // - 
+    LT, //Less than
+    LTE, // Less than or equal
+    MINUS, // -
+    MULTIPLICATION, // *
     NEGATION, // !
     PLUS, // +
     RBRACE, // }
+    RETURN, // return
     RPAREN, // )
-    SEMICOLON // ;
+    SEMICOLON, // ;
+    TRUE // true
 };
 
-static const char *enumStr[] = {"ASSIGN", "COMMA", "DIF", "ELSE", "EOF_TOKEN", "EQ", "FUNCTION", 
+static const char *enumStr[] = {"ASSIGN", "COMMA", "DIF", "DIVISION", "ELSE", "EOF_TOKEN", "EQ", "FALSE", "FUNCTION", 
 "IDENTIFIER", "IF", "GT", "GTE", "ILLEGAL", "INTEGER", "LBRACE", "LET", "LPAREN", "LT", "LTE", 
-"MINUS", "NEGATION", "PLUS", "RBRACE", "RPAREN", "SEMICOLON"};
+"MINUS", "MULTIPLICATION", "NEGATION", "PLUS", "RBRACE", "RETURN", "RPAREN", "SEMICOLON", "TRUE"};
 
 class Token {
 public:
@@ -54,11 +59,14 @@ TokenType lookup_token_type(const std::string &literal) {
         {"function", TokenType::FUNCTION},
         {"variable", TokenType::LET},
         {"if", TokenType::IF},
-        {"else", TokenType::ELSE}
+        {"else", TokenType::ELSE},
+        {"return", TokenType::RETURN},
+        {"true", TokenType::TRUE},
+        {"false", TokenType::FALSE}
     };
     auto it = keywords.find(literal);
     if (it != keywords.end()) {
-        return it->second;
+        return it -> second;
     }
     return TokenType::IDENTIFIER;
 }
@@ -143,51 +151,54 @@ public:
             if (_peek_character() == '=') {
                 token = _make_two_character_token(TokenType::EQ);
             } else {
-                token = Token(TokenType::ASSIGN, std::string(1, _character));
+                token = Token(TokenType::ASSING, std::string(1, _character));
             }
-        } else if (_character == '!') { // Negation ! or Dif !=
+        } else if (_character == ',') { // Comma ,
+            token = Token(TokenType::COMMA, std::string(1, _character));
+        } else if (_character == '!') { // Different than != or negation !
             if (_peek_character() == '=') {
                 token = _make_two_character_token(TokenType::DIF);
             } else {
                 token = Token(TokenType::NEGATION, std::string(1, _character));
             }
-        } else if (_character == '+') { // Plus +
-            token = Token(TokenType::PLUS, std::string(1, _character));
-        } else if(_character == '{') { // Lbrace {
-            token = Token(TokenType::LBRACE, std::string(1, _character));
-        } else if(_character == '}') { // Rbrace }
-            token = Token(TokenType::RBRACE, std::string(1, _character));
-        } else if(_character == '(') { // Lparen (
-            token = Token(TokenType::LPAREN, std::string(1, _character));
-        } else if(_character == ')') { // Rparen )
-            token = Token(TokenType::RPAREN, std::string(1, _character));
-        } else if(_character == '-') { // Minus -
-            token = Token(TokenType::MINUS, std::string(1, _character));
-        } else if(_character == ',') { // Comma ,
-            token = Token(TokenType::COMMA, std::string(1, _character));
-        } else if(_character == ';') { // Semicolon ;
-            token = Token(TokenType::SEMICOLON, std::string(1, _character));
+        } else if (_character == '/') { // Division /
+            token = Token(TokenType::DIVISION, std::string(1, _character));
+        } else if(_character == '\0') { // Blank: End of File
+            token = Token(TokenType::EOF_TOKEN, std::string(1, _character));
         } else if (_is_letter(_character)) { // Letter
             std::string literal = _read_identifier();
             TokenType token_type = lookup_token_type(literal);
             return Token(token_type, literal);
-        } else if (_is_number(_character)) { // Number
-            std::string literal = _read_number();
-            TokenType token_type = lookup_token_type(literal);
-            return Token(TokenType::INTEGER, literal);
         } else if(_character == '>') { // Greater than > or equals >=
             if(_peek_character() == '=')
                 token = _make_two_character_token(TokenType::GTE);
             else
                 token = Token{TokenType::GT, std::string(1, _character)};
-        } else if(_character == '<') // Less than < or equals <=
-        {
+        } else if (_is_number(_character)) { // Number
+            std::string literal = _read_number();
+            TokenType token_type = lookup_token_type(literal);
+            return Token(TokenType::INTEGER, literal);        
+        } else if(_character == '{') { // Lbrace {
+            token = Token(TokenType::LBRACE, std::string(1, _character));
+        } else if(_character == '(') { // Lparen (
+            token = Token(TokenType::LPAREN, std::string(1, _character));
+        } else if(_character == '<') { // Less than < or equals <=
             if(_peek_character() == '=')
                 token = _make_two_character_token(TokenType::LTE);
             else
                 token = Token{TokenType::LT, std::string(1, _character)};
-        } else if(_character == '\0') { // End of file
-            token = Token(TokenType::EOF_TOKEN, std::string(1, _character));
+        } else if(_character == '-') { // Minus -
+            token = Token(TokenType::MINUS, std::string(1, _character));
+        } else if(_character == '*') { // Multiplication *
+            token = Token(TokenType::MULTIPLICATION, std::string(1, _character));
+        } else if (_character == '+') { // Plus +
+            token = Token(TokenType::PLUS, std::string(1, _character));
+        } else if(_character == '}') { // Rbrace }
+            token = Token(TokenType::RBRACE, std::string(1, _character));
+        } else if(_character == ')') { // Rparen )
+            token = Token(TokenType::RPAREN, std::string(1, _character));
+        } else if(_character == ';') { // Semicolon ;
+            token = Token(TokenType::SEMICOLON, std::string(1, _character));
         }
         _read_character();
         return token;

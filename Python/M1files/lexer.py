@@ -7,10 +7,10 @@ from M1files.tokens import(
 
 class Lexer:
     def __init__(self, source:str) -> None:
-        self._source:str=source
-        self._character:str=''
+        self._source:str = source
+        self._character:str = ''
         self._position:int = 0
-        self._read_position:int=0
+        self._read_position:int = 0
         self._read_character()
 
     def next_token(self)->Token:

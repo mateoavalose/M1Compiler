@@ -12,28 +12,33 @@ from typing import (
 class TokenType(Enum):
     ASSING = auto() # =
     COMMA = auto() # ,
-    DIF = auto() # !=
+    DIF = auto() #Different
+    DIVISION = auto() # /
     ELSE = auto() # else
-    EOF = auto() # Blank (End of File)
-    EQ = auto() # Equals
-    FUNCTION = auto() # function
-    IDENTIFIER = auto() # Letter
-    IF = auto() # if
-    GT = auto() # > (Greater than)
-    GTE = auto() # >= (Greater than or equal)
-    ILLEGAL = auto() # Not identified
-    INTEGER = auto() # Number
+    EOF = auto() #Blank
+    EQ = auto() #Equals
+    FALSE = auto() # false
+    FUNCTION = auto() #function
+    IDENTIFIER = auto() #Letter
+    IF = auto() #if
+    GT = auto() #Greater than
+    GTE = auto() #Greater than or equal
+    ILLEGAL = auto() #Not identified
+    INTEGER = auto() #Number
     LBRACE = auto() # {
     LET = auto() # variable
     LPAREN = auto() # (
-    LT = auto() # < (Less than)
-    LTE = auto() # <= (Less than or equal)
+    LT = auto() #Less than
+    LTE = auto() #Less than or equal
     MINUS = auto() # -
-    NEGATION = auto() # !
+    MULTIPLICATION = auto() # *
+    NEGATION = auto() #!
     PLUS = auto() # +
     RBRACE = auto() # }
+    RETURN = auto() # return
     RPAREN = auto() # )
     SEMICOLON = auto() # ;
+    TRUE = auto() # true
 
 
 class Token(NamedTuple):
@@ -47,6 +52,9 @@ def lookup_token_type(literal:str)->TokenType:
         'function':TokenType.FUNCTION,
         'variable':TokenType.LET,
         'if':TokenType.IF,
-        'else':TokenType.ELSE
+        'else':TokenType.ELSE,
+        'return':TokenType.RETURN,
+        'true':TokenType.TRUE,
+        'false':TokenType.FALSE
     }
     return keywords.get(literal, TokenType.IDENTIFIER)

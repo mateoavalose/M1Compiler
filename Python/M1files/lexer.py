@@ -17,50 +17,54 @@ class Lexer:
         self._skip_whitespace()
         if match(r'^=$', self._character): # Assing or equals =
             if self._peek_character() == '=':
-                token = self._make_two_character_token(TokenType.EQ) # Equals ==
+                token = self._make_two_character_token(TokenType.EQ) #Equals ==
             else: 
-                token=Token(TokenType.ASSING, self._character) 
-        elif match(r'^!$',self._character): # Different than !
-            if self._peek_character() == '=':
+                token=Token(TokenType.ASSING, self._character)
+        elif match(r'^,$', self._character): #Comma ,
+            token = Token(TokenType.COMMA, self._character)
+        elif match(r'^!$',self._character): #Different than
+            if self._peek_character == '=':
                 token = self._make_two_character_token(TokenType.DIF)
             else:
                 token = Token(TokenType.NEGATION, self._character)
-        elif match(r'^\+$', self._character): # Plus +
-            token = Token(TokenType.PLUS, self._character)
+        elif match(r'^/$', self._character): #Division /
+            token = Token(TokenType.DIVISION, self._character)
         elif match(r'^$', self._character): #Blank
           token = Token(TokenType.EOF, self._character)
-        elif match(r'^{$', self._character): # Lbrace {
-            token = Token(TokenType.LBRACE, self._character)
-        elif match(r'^}$', self._character): # Rbrace }
-            token = Token(TokenType.RBRACE, self._character)
-        elif match(r'^\($', self._character): # Lparen (
-            token = Token(TokenType.LPAREN, self._character)
-        elif match(r'^\)$', self._character):# Rparen )
-            token = Token(TokenType.RPAREN, self._character)
-        elif match(r'^-$', self._character): # Minus -
-            token = Token(TokenType.MINUS, self._character)
-        elif match(r'^,$', self._character): #Comma ,
-            token = Token(TokenType.COMMA, self._character)
-        elif match(r'^;$', self._character): #Semicolon ;
-            token = Token(TokenType.SEMICOLON, self._character)
         elif self._is_letter(self._character): #Letter
             literal=self._read_identifier()
             token_type=lookup_token_type(literal)
             return Token(token_type,literal)
-        elif self._is_number(self._character): #Number
-            literal=self._read_number()
-            token_type=lookup_token_type(literal)
-            return Token(TokenType.INTEGER,literal)
         elif match(r'^>$', self._character): #Greater than
             if self._peek_character() == '=':
                 token = self._make_two_character_token(TokenType.GTE) #Greater than or equals
             else:
                 token = Token(TokenType.GT, self._character)
+        elif self._is_number(self._character): #Number
+            literal=self._read_number()
+            token_type=lookup_token_type(literal)
+            return Token(TokenType.INTEGER,literal)
+        elif match(r'^{$', self._character): # Lbrace {
+            token = Token(TokenType.LBRACE, self._character)
+        elif match(r'^\($', self._character): # Lparen (
+            token = Token(TokenType.LPAREN, self._character)
         elif match(r'^<$', self._character): #Less than
             if self._peek_character() == '=':
                 token = self._make_two_character_token(TokenType.LTE) #Less than or equals
             else:
                 token = Token(TokenType.LT, self._character)
+        elif match(r'^-$', self._character): # Minus -
+            token = Token(TokenType.MINUS, self._character)
+        elif match(r'^\*$', self._character): # Multiplication *
+            token = Token(TokenType.MULTIPLICATION, self._character)
+        elif match(r'^\+$', self._character): # Plus +
+            token = Token(TokenType.PLUS, self._character)
+        elif match(r'^}$', self._character): # Rbrace }
+            token = Token(TokenType.RBRACE, self._character)
+        elif match(r'^\)$', self._character):# Rparen )
+            token = Token(TokenType.RPAREN, self._character)
+        elif match(r'^;$', self._character): #Semicolon ;
+            token = Token(TokenType.SEMICOLON, self._character)
         else: #Not identified, ILLEGAL
             print(self._character)
             token=Token(TokenType.ILLEGAL, self._character)

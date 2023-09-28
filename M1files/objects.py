@@ -6,6 +6,7 @@ from enum import(
     auto,
     Enum
 )
+from typing import Dict
 
 class ObjectType(Enum):
     BOOLEAN = auto()
@@ -13,6 +14,7 @@ class ObjectType(Enum):
     NULL = auto()
     FLOAT = auto()
     STRING = auto()
+    RETURN = auto()
     
 class Object(ABC):
     @abstractmethod
@@ -69,3 +71,26 @@ class String(Object):
 
     def inspect(self) -> str:
         return str(self.value)
+    
+class Return(Object):
+    def __init__(self, value:Object) -> None:
+        self.value:Object = value
+    
+    def type(self) -> ObjectType:
+        return ObjectType.RETURN
+
+    def inspect(self) -> str:
+        return self.value.inspect()
+    
+
+# This class is the one used to store variables
+class Enviroment(Dict):
+    #Store is a dictionary by default
+    def __init__(self):
+        self._store = dict()
+    def __getitem__(self, __key):
+        return self._store[__key]
+    def __setitem__(self, __key, __value):
+        self._store[__key] = __value
+    def __delitem__(self, __key):
+        del self._store[__key]

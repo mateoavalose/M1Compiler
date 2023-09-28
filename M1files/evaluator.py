@@ -1,4 +1,5 @@
 from typing import(
+    Any,
     cast,
     List,
     Optional, 
@@ -10,7 +11,9 @@ from M1files.objects import (
     Integer,
     Null,
     Object,
-    ObjectType
+    ObjectType,
+    Return,
+    Enviroment
 )
 
 TRUE = Boolean(True)
@@ -82,7 +85,7 @@ def evaluate(node: ast.ASTNode) -> Optional[Object]:
     node_type:Type = type(node)
     if node_type == ast.Program:
         node = cast(ast.Program, node)
-        return _evaluate_statements(node.statements)
+        return _evaluate_program(node)
     elif node_type == ast.ExpressionStatement:
         node = cast(ast.ExpressionStatement, node)
         assert node.expression is not None
@@ -110,17 +113,40 @@ def evaluate(node: ast.ASTNode) -> Optional[Object]:
         return _evaluate_infix_expression(node.operator, left, right)
     elif node_type == ast.Block:
         node = cast(ast.Block, node)
-        return _evaluate_statements(node.statements)
+        return _evaluate_block_statement(node)
     elif node_type == ast.If:
         node = cast(ast.If, node)
         return _evaluate_if_expression(node)
+    elif node_type == ast.ReturnStatement:
+        node = cast(ast.ReturnStatement, node)
+        assert node.return_value is not None
+        value = evaluate(node.return_value)
+        return Return(value)
     return None
 
+""""
 def _evaluate_statements(statements:List[ast.Statement]) -> Optional[Object]:
     result:Optional[Object] = None
     for statement in statements:
         result = evaluate(statement)
     return result
+"""
+
+def _evaluate_program(program:ast.Program) -> Optional[Object]:
+    result:Optional[Object] = None
+    for statement in program.statements:
+        result = evaluate(statement)
+        if type(result) == Return:
+            result = cast(Return, result)
+            return result.value
+    return result
+
+def _evaluate_block_statement(block:ast.Block) -> Optional[Object]:
+    result:Optional[Object] = None
+    for statement in block.statements:
+        result = evaluate(statement)
+        if result is not None and result.type() == ObjectType.RETURN:
+            return result
 
 def _is_truthy(obj:Object) -> bool:
     if obj is NULL:

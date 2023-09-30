@@ -8,12 +8,12 @@ from typing import(
 import M1files.ast as ast
 from M1files.objects import (
     Boolean, 
+    Enviroment,
     Integer,
     Null,
     Object,
     ObjectType,
-    Return,
-    Enviroment
+    Return
 )
 
 TRUE = Boolean(True)

@@ -81,7 +81,6 @@ class Return(Object):
 
     def inspect(self) -> str:
         return self.value.inspect()
-    
 
 # This class is the one used to store variables
 class Enviroment(Dict):

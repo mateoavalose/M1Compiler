@@ -2,7 +2,7 @@
 #include "M1files/HeaderFiles/repl.h"
 
 int main() {
-    std::cout << "Bienvenido al Lenguaje de Programacion M1 (C++)" << std::endl;
+    std::cout << "Welcome to the M1 programming language (C++)" << std::endl;
     start_repl();
     return 0;
 };

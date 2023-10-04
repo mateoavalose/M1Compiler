@@ -37,3 +37,6 @@ __pycache__
 # Ignore C++ build files
 *.cppcheck
 test.exe
+
+# Ignore Java build files
+*.class

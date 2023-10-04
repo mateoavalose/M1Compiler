@@ -11,7 +11,7 @@ enum TokenType {
     ELSE, // 'else'
     EOF, // Blank
     EQ, // '=='
-    FALSE, // false
+    FALSE, // 'false'
     FUNCTION, // 'function'
     IDENTIFIER, // Letter
     IF, // 'if'
@@ -20,19 +20,19 @@ enum TokenType {
     ILLEGAL, // Not identified
     INTEGER, // Number
     LBRACE, // '{'
-    LET, // variable
+    LET, // 'variable'
     LPAREN, // '('
-    LT, // <
+    LT, // '<'
     LTE, // '<='
     MINUS, // '-'
     MULTIPLICATION, // '*'
     NEGATION, // '!'
     PLUS, // '+'
     RBRACE, // '}'
-    RETURN, // return
+    RETURN, // 'return'
     RPAREN, // ')'
     SEMICOLON, // ';'
-    TRUE // true
+    TRUE // 'true'
 }
  
 public class Token {

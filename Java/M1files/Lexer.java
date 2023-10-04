@@ -2,7 +2,7 @@ package M1files;
 
 public class Lexer {
     private String source;
-    private String character;
+    private char character;
     private int position;
     private int readPosition;
 
@@ -15,57 +15,61 @@ public class Lexer {
 
     public Token nextToken(){
         skipWhitespace();
-        Token token = new Token(TokenType.ILLEGAL, character);
-        if(character.equals("=")) {
-            if(peekCharacter().equals("=")) { // Assing or equals '=' or '=='
+        Token token = new Token(TokenType.ILLEGAL, String.valueOf(character));
+        if(character == '=') {
+            if(peekCharacter() == '=') { // Assing or equals '=' or '=='
                 token =  makeTwoCharacterToken(TokenType.EQ); // '=='
             } else {
-                token = new Token(TokenType.ASSIGN, character); // '='
+                token = new Token(TokenType.ASSIGN, String.valueOf(character)); // '='
             }
-        } else if(character.equals(",")) { // Comma ,
-            token = new Token(TokenType.COMMA, character);
-        } else if(character.equals("!")) { // Different or equals '!='
-            if(peekCharacter().equals("=")) { 
+        } else if(character == ',') { // Comma ,
+            token = new Token(TokenType.COMMA, String.valueOf(character));
+        } else if(character == '!') { // Different or equals '!='
+            if(peekCharacter() == '=') { 
                 token =  makeTwoCharacterToken(TokenType.DIF); // '!='
             } else {
-                token =  new Token(TokenType.NEGATION, character); // '!'
+                token =  new Token(TokenType.NEGATION, String.valueOf(character)); // '!'
             }
-        } else if(character.equals("/")) { // Division
-            token = new Token(TokenType.DIVISION, character);
-        } else if(character.equals("")) { // Blank
-            token = new Token(TokenType.EOF, character);
-        } else if(Character.isLetter(character.charAt(0))) { // Letter
-            token = new Token(Translator.lookupTokenType(readIdentifier()), readIdentifier());
-        } else if(character.equals(">")) { // Greater than 
-            if(peekCharacter().equals("=")) {
+        } else if(character == '/') { // Division
+            token = new Token(TokenType.DIVISION, String.valueOf(character));
+        } else if(character == '\u0000') { // Blank
+            token = new Token(TokenType.EOF, String.valueOf(character));
+        } else if(Character.isLetter(character)) { // Letter
+            String literal = readIdentifier();
+            TokenType tokenType = Translator.lookupTokenType(literal);
+            token = new Token(tokenType, literal);
+        } else if(character == '>') { // Greater than 
+            if(peekCharacter() == '=') {
                 token = makeTwoCharacterToken(TokenType.GTE); // '>='
             } else {
-                token = new Token(TokenType.GT, character); // '>'
+                token = new Token(TokenType.GT, String.valueOf(character)); // '>'
             }
-        } else if(Character.isDigit(character.charAt(0))){ // Number
-            token = new Token(Translator.lookupTokenType(readNumber()), readNumber());
-        } else if(character.equals("{")) { // Rbrace '{'
-            token = new Token(TokenType.LBRACE, character);
-        } else if(character.equals("(")) { // Lparen '('
-            token = new Token(TokenType.LPAREN, character);
-        } else if(character.equals("<")) { // Less than
-            if(peekCharacter().equals("=")) {
+        } else if(Character.isDigit(character)){ // Number
+            String literal = readNumber();
+            //TokenType tokenType = Translator.lookupTokenType(literal);
+            token = new Token(TokenType.INTEGER, literal);
+        } else if(character == '{') { // Rbrace '{'
+            token = new Token(TokenType.LBRACE, String.valueOf(character));
+        } else if(character == '(') { // Lparen '('
+            token = new Token(TokenType.LPAREN, String.valueOf(character));
+        } else if(character == '<') { // Less than
+            if(peekCharacter() == '=') {
                 token = makeTwoCharacterToken(TokenType.LTE); // '<='
             } else {
-                token = new Token(TokenType.LT, character); // '<'
+                token = new Token(TokenType.LT, String.valueOf(character)); // '<'
             }
-        } else if(character.equals("-")) { // Minus '-'
-            token = new Token(TokenType.MINUS, character);
-        } else if(character.equals("*")) { // Multiplication '*'
-            token = new Token(TokenType.MULTIPLICATION, character);
-        } else if(character.equals("+")) { // Plus '+'
-            token = new Token(TokenType.PLUS, character);
-        } else if(character.equals("}")){ // Rbrace '}'
-            token = new Token(TokenType.RBRACE, character);
-        } else if(character.equals(")")){ // Rparen ')'
-            token = new Token(TokenType.RPAREN, character);
-        } else if(character.equals(";")) { // Semicolon ';'
-            token = new Token(TokenType.SEMICOLON, character);
+        } else if(character == '-') { // Minus '-'
+            token = new Token(TokenType.MINUS, String.valueOf(character));
+        } else if(character == '*') { // Multiplication '*'
+            token = new Token(TokenType.MULTIPLICATION, String.valueOf(character));
+        } else if(character == '+') { // Plus '+'
+            token = new Token(TokenType.PLUS, String.valueOf(character));
+        } else if(character == '}'){ // Rbrace '}'
+            token = new Token(TokenType.RBRACE, String.valueOf(character));
+        } else if(character == ')'){ // Rparen ')'
+            token = new Token(TokenType.RPAREN, String.valueOf(character));
+        } else if(character == ';') { // Semicolon ';'
+            token = new Token(TokenType.SEMICOLON, String.valueOf(character));
         }
         readCharacter();
         return token;
@@ -73,46 +77,41 @@ public class Lexer {
 
     private String readNumber(){
         int initialPosition = position;
-        while(/*position < source.length() &&*/ Character.isDigit(character.charAt(position))) {
+        while(Character.isDigit(character)) {
             readCharacter();
         }
         return source.substring(initialPosition, position);
     }
     private String readIdentifier(){
-        int startPosition = position;
-        while(position < source.length() && Character.isLetter(character.charAt(position))) {
+        int initialPosition = position;
+        while(position < source.length() && Character.isLetter(character)) {
             readCharacter();
         }
-        return source.substring(startPosition, position);
+        return source.substring(initialPosition, position);
     }
     private void readCharacter(){
-        /*if(readPosition >= source.length()) {
-            character = "";
-        } else {
-            character = source.substring(readPosition, readPosition + 1);
-        }*/
-        if (readPosition < source.length()) {
-            character = source.substring(readPosition, readPosition + 1);
-            position = readPosition;
-            readPosition++;
-        } else {
-            character = "";
-        }
-    }
-    private String peekCharacter(){
         if(readPosition >= source.length()) {
-            return "";
+            character = '\u0000';
+        } else {
+            character = source.charAt(readPosition);
+        }
+        position = readPosition;
+        readPosition++;
+    }
+    private char peekCharacter(){
+        if(readPosition >= source.length()) {
+            return '\u0000';
         } 
-        return source.substring(readPosition, readPosition + 1);
+        return source.charAt(readPosition);
     }
     private Token makeTwoCharacterToken(TokenType tokenType){
-        String prefix = character;
+        char prefix = character;
         readCharacter();
-        String suffix = character;
-        return new Token(tokenType, prefix + suffix);
+        char suffix = character;
+        return new Token(tokenType, String.valueOf(prefix) + suffix);
     }
     private void skipWhitespace(){
-        while(character.equals(" ") || character.equals("\t") || character.equals("\n") || character.equals("\r")) {
+        while(character == ' ' || character == '\t' || character == '\n' || character == '\r') {
             readCharacter();
         }
     }

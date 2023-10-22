@@ -11,11 +11,11 @@ public class Repl {
             if(source.equals("exit()")) break;
 
             Lexer lexer = new Lexer(source);
-            Token token = lexer.nextToken();
-            while(token.getTokenType() != TokenType.EOF){
-                System.out.println(token);
-                token = lexer.nextToken();
-            }
+            Parser parser = new Parser(lexer);
+            Program program = parser.parseProgram();
+            Object evaluated = Evaluator.evaluate(program);
+            if(evaluated != null) 
+                System.out.println(evaluated.inspect());
         }
     }
 }

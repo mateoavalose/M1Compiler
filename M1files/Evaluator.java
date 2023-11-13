@@ -95,7 +95,7 @@ public class Evaluator {
     }
 
     public static Object evaluate(ASTNode node) {
-        if (node instanceof Program) {
+        if (node instanceof Program) {   
             return evaluateStatements(((Program) node).getStatements());
         } else if (node instanceof ExpressionStatement) {
             Expression expression = ((ExpressionStatement) node).getExpression();
@@ -125,7 +125,7 @@ public class Evaluator {
     public static Object evaluateStatements(List<Statement> statements) {
         Object result = null;
         for (Statement statement : statements) {
-            result = evaluate(statement);
+            result = evaluate(statement); 
         }
         return result;
     }

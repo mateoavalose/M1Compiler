@@ -92,7 +92,7 @@ public class Parser {
     private Precedence currentPrecedence() {
         assert currentToken != null;
         try {
-            return precedences.get(currentToken.getTokenType());
+            return (precedences.get(peekToken.getTokenType()) != null) ? precedences.get(peekToken.getTokenType()) : Precedence.LOWEST;
         } catch (NullPointerException e) {
             return Precedence.LOWEST;
         }
@@ -355,8 +355,8 @@ public class Parser {
 
     private Precedence peekPrecedence() {
         assert peekToken != null;
-        try {
-            return precedences.get(peekToken.getTokenType());
+        try { 
+            return (precedences.get(peekToken.getTokenType()) != null) ? precedences.get(peekToken.getTokenType()) : Precedence.LOWEST;
         } catch (NullPointerException | IllegalArgumentException e) {
             return Precedence.LOWEST;
         }
